@@ -1,0 +1,48 @@
+jack@jomit007.onmicrosoft.com
+
+
+Nuget for WebAPI in ASF
+----------------------------
+Microsoft.Owin.Security.OAuth
+Microsoft.Owin.Security.Jwt
+Microsoft.Owin.Host.SystemWeb
+Microsoft.IdentityModel.Protocol.Extensions  (find it using Microsoft.IdentityModel)
+
+Then Add Reference to System.IdentityModel
+
+
+Service Fabric SSL
+--------------------------------
+https://azure.microsoft.com/en-us/documentation/articles/service-fabric-service-manifest-resources/
+https://matt.kotsenas.com/posts/https-in-service-fabric-web-api
+http://stackoverflow.com/questions/35307118/how-to-configure-ssl-on-a-self-hosted-web-api-in-azure-service-fabric
+
+Generate a certificate for localhost
+---------------------------------------------------
+openssl req -x509 -sha256 -nodes -newkey rsa:2048 -days 365 -keyout localhost.key -out localhost.crt
+
+
+Other - Add the localhost certificate provided by IISExpress to Root
+----------------------------------------------------------
+
+dir Cert:\LocalMachine\My
+
+$cert = (get-item cert:\LocalMachine\My\5124D5DBF1CDAC854F71ADEF2639A791C8757C52)
+$store = (get-item cert:\Localmachine\Root)
+$store.Open("ReadWrite")
+$store.Add($cert)
+$store.Close()
+
+
+(Do the above for)
+$store = (get-item cert:\CurrentUser\My)
+$store = (get-item cert:\CurrentUser\TrustedPeople)
+
+Verify
+--------------------------------
+dir Cert:\LocalMachine\My
+dir Cert:\CurrentUser\My
+dir Cert:\CurrentUser\TrustedPeople
+
+
+

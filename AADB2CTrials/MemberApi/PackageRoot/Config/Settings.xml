@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Section Name="AADConfig">
+    <Parameter Name="ida:AadInstance" Value="https://login.microsoftonline.com/{0}/v2.0/.well-known/openid-configuration?p={1}" />
+    <Parameter Name="ida:Tenant" Value="jomit007.onmicrosoft.com" />
+    <Parameter Name="ida:ClientId" Value="49e15f43-1196-419d-a75c-c36c35f3ec4f" />
+    <Parameter Name="ida:SignUpPolicyId" Value="B2C_1_signup" />
+    <Parameter Name="ida:SignInPolicyId" Value="B2C_1_signin" />
+    <Parameter Name="ida:UserProfilePolicyId" Value="B2C_1_editprofile" />
+  </Section>
+</Settings>
