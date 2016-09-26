@@ -1,0 +1,69 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "value": "jomitsf"
+    },
+    "adminUserName": {
+      "value": "jomit"
+    },
+    "adminPassword": {
+      "value": "book@cafe123"
+    },
+    "fabricTcpGatewayPort": {
+      "value": 19000
+    },
+    "fabricHttpGatewayPort": {
+      "value": 19080
+    },
+    "frontEndLoadBalancedAppPort1": {
+      "value": 80
+    },
+    "frontEndLoadBalancedAppPort2": {
+      "value": 443
+    },
+    "backEndLoadBalancedAppPort1": {
+      "value": 80
+    },
+    "backEndLoadBalancedAppPort2": {
+      "value": 443
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmLogStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "applicationDiagnosticsStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmssDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "frontEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "frontEndVMInstanceCount": {
+      "value": 3
+    },
+    "backEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "backEndVMInstanceCount": {
+      "value": 3
+    },
+    "managementVMSize": {
+      "value": "Standard_D2"
+    },
+    "managementVMInstanceCount": {
+      "value": 3
+    },
+    "clusterDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "clusterReliabilityLevel": {
+      "value": "Bronze"
+    }
+  }
+}
