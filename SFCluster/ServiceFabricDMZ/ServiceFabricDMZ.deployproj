@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>db0ab4b3-8fcc-4852-b29a-2152e692c785</ProjectGuid>
+    <ProjectGuid>bf3f2407-a523-4f05-80a3-8839a3505d73</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFrameworkIdentifier>Deployment</TargetFrameworkIdentifier>
@@ -32,11 +32,9 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
-    <Content Include="Templates\ServiceFabricCluster.json" />
-    <Content Include="Templates\ServiceFabricCluster.parameters.json" />
-    <None Include="New-ServiceFabricClusterCertificate.ps1" />
-    <None Include="readme.txt" />
-    <None Include="Setup.ps1" />
+    <Content Include="Templates\azuredeploy.json" />
+    <Content Include="Templates\azuredeploy.parameters.json" />
+    <None Include="SetupKeyVault-Certificate.ps1" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
