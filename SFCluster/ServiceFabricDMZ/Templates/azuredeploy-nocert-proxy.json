@@ -389,20 +389,7 @@
         "clusterName": "[parameters('clusterName')]"
       }
     },
-    {
-      "comments": "Jump Box VHD Storage account",
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('jumpBoxVM')['StorageAccountName']]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('storageAccountType')]"
-      },
-      "tags": {
-        "clusterName": "[parameters('clusterName')]"
-      }
-    },
-
+  
     /* Network Security Groups frontend, backend and management subnets */
     {
       "comments": "Create Network Security Group for Management Subnet",
