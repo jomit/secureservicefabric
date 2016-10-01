@@ -2,7 +2,7 @@
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.VisualStudio.Azure.Fabric.MSBuild.1.2.0\build\Microsoft.VisualStudio.Azure.Fabric.Application.props" Condition="Exists('..\packages\Microsoft.VisualStudio.Azure.Fabric.MSBuild.1.2.0\build\Microsoft.VisualStudio.Azure.Fabric.Application.props')" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>252f964b-2774-4894-bf58-16d2bfa1739f</ProjectGuid>
+    <ProjectGuid>c1c9857c-3303-43d2-9699-a964153c7720</ProjectGuid>
     <ProjectVersion>1.2</ProjectVersion>
   </PropertyGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -18,18 +18,18 @@
   <ItemGroup>
     <None Include="ApplicationPackageRoot\ApplicationManifest.xml" />
     <None Include="ApplicationParameters\Cloud.xml" />
+    <None Include="ApplicationParameters\Local.1Node.xml" />
     <None Include="ApplicationParameters\Local.5Node.xml" />
     <None Include="PublishProfiles\Cloud.xml" />
+    <None Include="PublishProfiles\Local.1Node.xml" />
     <None Include="PublishProfiles\Local.5Node.xml" />
     <None Include="Scripts\Deploy-FabricApplication.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ApplicationParameters\Local.1Node.xml" />
     <Content Include="packages.config" />
-    <Content Include="PublishProfiles\Local.1Node.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MemberApi\MemberApi.csproj" />
+    <ProjectReference Include="..\MyApi\MyApi.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

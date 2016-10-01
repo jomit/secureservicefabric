@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureApi", "SecureApi\Secu
 EndProject
 Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "ServiceFabricDMZ", "ServiceFabricDMZ\ServiceFabricDMZ.deployproj", "{BF3F2407-A523-4F05-80A3-8839A3505D73}"
 EndProject
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "TestAppProxy", "TestAppProxy\TestAppProxy.sfproj", "{C1C9857C-3303-43D2-9699-A964153C7720}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyApi", "MyApi\MyApi.csproj", "{379EF471-8DCE-4064-ACAE-235309D474D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,20 @@ Global
 		{BF3F2407-A523-4F05-80A3-8839A3505D73}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BF3F2407-A523-4F05-80A3-8839A3505D73}.Release|x64.ActiveCfg = Release|Any CPU
 		{BF3F2407-A523-4F05-80A3-8839A3505D73}.Release|x64.Build.0 = Release|Any CPU
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Debug|x64.ActiveCfg = Debug|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Debug|x64.Build.0 = Debug|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Debug|x64.Deploy.0 = Debug|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Release|Any CPU.ActiveCfg = Release|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Release|x64.ActiveCfg = Release|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Release|x64.Build.0 = Release|x64
+		{C1C9857C-3303-43D2-9699-A964153C7720}.Release|x64.Deploy.0 = Release|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Debug|x64.ActiveCfg = Debug|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Debug|x64.Build.0 = Debug|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Release|Any CPU.ActiveCfg = Release|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Release|x64.ActiveCfg = Release|x64
+		{379EF471-8DCE-4064-ACAE-235309D474D0}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

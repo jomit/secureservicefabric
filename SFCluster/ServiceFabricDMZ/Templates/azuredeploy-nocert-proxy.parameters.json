@@ -1,0 +1,87 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "value": "gathasf"
+    },
+    "adminUserName": {
+      "value": "jomit"
+    },
+    "adminPassword": {
+      "value": "book@cafe123"
+    },
+    "fabricTcpGatewayPort": {
+      "value": 19000
+    },
+    "fabricHttpGatewayPort": {
+      "value": 19080
+    },
+    "frontEndLoadBalancedAppPort1": {
+      "value": 80
+    },
+    "frontEndLoadBalancedAppPort2": {
+      "value": 443
+    },
+    "backEndLoadBalancedAppPort1": {
+      "value": 80
+    },
+    "backEndLoadBalancedAppPort2": {
+      "value": 443
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmLogStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "applicationDiagnosticsStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmssDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "frontEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "frontEndVMInstanceCount": {
+      "value": 3
+    },
+    "backEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "backEndVMInstanceCount": {
+      "value": 3
+    },
+    "managementVMSize": {
+      "value": "Standard_D2"
+    },
+    "managementVMInstanceCount": {
+      "value": 3
+    },
+    "clusterDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "clusterReliabilityLevel": {
+      "value": "Bronze"
+    },
+    "certificateStorevalue": {
+      "value": "My"
+    },
+    "certificateThumbprint": {
+      "value": "87AAA3D37BDBDC5FD05828FC97697D451E4C5FD4"
+    },
+    "sourceVaultvalue": {
+      "value": "/subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/appCerts"
+    },
+    "certificateUrlvalue": {
+      "value": "https://appcerts.vault.azure.net:443/secrets/jomitsfcert/9eeb5ca4f44b49e3ae7c59129e9ae230"
+    },
+    "clusterProtectionLevel": {
+      "value": "EncryptAndSign"
+    },
+    "SFReverseProxyPort": {
+       "value": 19008
+    }
+  }
+}

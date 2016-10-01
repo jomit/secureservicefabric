@@ -1,3 +1,7 @@
+AAD B2c Walthrough Quick Guides
+--------------------------------------------
+https://azure.microsoft.com/en-us/documentation/articles/active-directory-b2c-devquickstarts-web-dotnet/
+
 jack@jomit007.onmicrosoft.com
 
 
