@@ -331,24 +331,18 @@
       "ephemeralEndPort": "65534"
     },
 
-    "jumpBoxVM": {
-      "Name": "[concat(parameters('clusterName'), '-vmJUMP')]",
-      "nicName": "[concat(parameters('clusterName'), '-nicJUMP')]",
-      "pipName": "[concat(parameters('clusterName'),'-pipJUMP')]",
-      "AddressType": "Static",
-      "ipAddr": "192.100.3.4",
-      "DNS": "[toLower(concat(parameters('clusterName'), 'JUMP'))]",
-      "TypeSize": "Standard_D2",
-      "StorageAccountName": "[toLower(concat(uniqueString(resourceGroup().id), 'JUMP' ))]"
-    },
-
-    "vmssOverProvision": "false"
+    "vmssOverProvision": "false",
+    "vmssApiVersion": "2016-03-30",
+    "lbApiVersion": "2015-06-15",
+    "vNetApiVersion": "2015-06-15",
+    "storageApiVersion": "2016-01-01",
+    "publicIPApiVersion": "2015-06-15"
   },
   "resources": [
     /* Storage accounts */
     {
       "comments": "Storage accounts for all VM Scale Sets",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[concat(variables('storageAccountNameArray')[copyIndex()], variables('storageAccountSuffix'))]",
       "location": "[resourceGroup().location]",
@@ -356,8 +350,10 @@
         "name": "storageLoop",
         "count": "[length(variables('storageAccountNameArray'))]"
       },
-      "properties": {
-        "accountType": "[parameters('storageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -365,12 +361,14 @@
     },
     {
       "comments": "Log storage account for VM diagnostics and the jump box OS disk",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('vmLogStorageAccountName')]",
       "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('vmLogStorageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('vmLogStorageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -378,12 +376,14 @@
     },
     {
       "comments": "Diagnostics storage account for Service Fabric Clusters",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('applicationDiagnosticsStorageAccountName')]",
       "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('vmLogStorageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('vmLogStorageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -480,20 +480,6 @@
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 3950,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "comments": "allow RDP into the Jumpbox from the internet",
-            "name": "allowJumpBoxRDP",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "[variables('jumpBoxVM')['ipAddr']]",
-              "access": "Allow",
-              "priority": 3960,
               "direction": "Inbound"
             }
           },
@@ -610,6 +596,20 @@
             }
           },
           {
+            "comments": "allow sf reverse proxy",
+            "name": "allowReverseProxy",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('SFReverseProxyPort')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3951,
+              "direction": "Inbound"
+            }
+          },
+          {
             "comments": "block all traffic except what we've explicitly allowed",
             "name": "blockAll",
             "properties": {
@@ -722,6 +722,20 @@
             }
           },
           {
+            "comments": "allow sf reverse proxy",
+            "name": "allowReverseProxy",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('SFReverseProxyPort')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3951,
+              "direction": "Inbound"
+            }
+          },
+          {
             "comments": "block all traffic except what we've explicitly allowed",
             "name": "blockAll",
             "properties": {
@@ -744,7 +758,7 @@
 
     /* Virtual Network */
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('vNetApiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[resourceGroup().location]",
@@ -796,7 +810,7 @@
     /* Public IP's for frontend and mangement endpoints */
     {
       "comments": "Public IP for Front End",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('publicIPApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('frontEndPublicIP')['Name']]",
       "location": "[resourceGroup().location]",
@@ -811,8 +825,8 @@
       }
     },
     {
-      "comments": "Public IP for Back End",
-      "apiVersion": "2015-06-15",
+      "comments": "Public IP for Management",
+      "apiVersion": "[variables('publicIPApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('managementPublicIP')['Name']]",
       "location": "[resourceGroup().location]",
@@ -830,7 +844,7 @@
     /* Load Balancers for frontend, backend and management nodes*/
     {
       "comments": "Front End Load Balancer",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('frontEndLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -949,7 +963,7 @@
     },
     {
       "comments": "Backend Load Balancer (Private)",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('backEndLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -1070,7 +1084,7 @@
     },
     {
       "comments": "Management Load Balancer",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('managementLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -1190,7 +1204,7 @@
     /* VM Scale sets for frontend, backend and management nodes */
     {
       "comments": "VM Scale Set for fronend nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('frontEndNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1287,7 +1301,7 @@
     },
     {
       "comments": "VM Scale Set for backend nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('backEndNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1384,7 +1398,7 @@
     },
     {
       "comments": "VM Scale Set for management nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('managementNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1517,7 +1531,6 @@
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
             "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
-            //"reverseProxyEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": false,
             "comments": "customize the placement properties for this node type",
             "placementProperties": {
@@ -1539,7 +1552,6 @@
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
             "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
-            //"reverseProxyEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": false,
             "placementProperties": {
               "isDMZ": "false"
@@ -1560,7 +1572,6 @@
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
             "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
-            //"reverseProxyEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": true,
             "placementProperties": {
               "isDMZ": "false"

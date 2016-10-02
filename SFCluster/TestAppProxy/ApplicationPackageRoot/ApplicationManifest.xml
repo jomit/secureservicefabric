@@ -19,7 +19,7 @@
     <Service Name="MyApi">
       <StatelessService ServiceTypeName="MyApiType" InstanceCount="[MyApi_InstanceCount]">
         <SingletonPartition />
-        <PlacementConstraints>NodeType == frontend</PlacementConstraints>
+        <PlacementConstraints>NodeType == FrontEnd</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>
