@@ -1,11 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="TestAppProxyType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
+    <Parameter Name="MyBackend_InstanceCount" DefaultValue="-1" />
     <Parameter Name="MyApi_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="FrontendConstraint" DefaultValue="" />
+    <Parameter Name="BackendConstraint" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
        ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="MyBackendPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="MyApiPkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
@@ -19,7 +26,13 @@
     <Service Name="MyApi">
       <StatelessService ServiceTypeName="MyApiType" InstanceCount="[MyApi_InstanceCount]">
         <SingletonPartition />
-        <PlacementConstraints>NodeType == FrontEnd</PlacementConstraints>
+        <PlacementConstraints>[FrontendConstraint]</PlacementConstraints>
+      </StatelessService>
+    </Service>
+    <Service Name="MyBackend">
+      <StatelessService ServiceTypeName="MyBackendType" InstanceCount="[MyBackend_InstanceCount]">
+        <SingletonPartition />
+        <PlacementConstraints>[BackendConstraint]</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>

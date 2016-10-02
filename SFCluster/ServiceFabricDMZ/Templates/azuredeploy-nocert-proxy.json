@@ -34,34 +34,34 @@
         "description": "Port for Http Client Connection end point to perform management operations on this cluster"
       }
     },
-    "frontEndLoadBalancedAppPort1": {
-      "type": "int",
-      "defaultValue": 80,
-      "metadata": {
-        "description": "Front end, public port 1 to use. Replace it with what your application uses"
-      }
-    },
-    "frontEndLoadBalancedAppPort2": {
-      "type": "int",
-      "defaultValue": 443,
-      "metadata": {
-        "description": "Front end, public port 2 to use. Replace it with what your application uses"
-      }
-    },
-    "backEndLoadBalancedAppPort1": {
-      "type": "int",
-      "defaultValue": 80,
-      "metadata": {
-        "description": "Back end, private port 1 to use. Replace it with what your application uses"
-      }
-    },
-    "backEndLoadBalancedAppPort2": {
-      "type": "int",
-      "defaultValue": 443,
-      "metadata": {
-        "description": "Back end, private port 1 to use. Replace it with what your application uses"
-      }
-    },
+    //"frontEndLoadBalancedAppPort1": {
+    //  "type": "int",
+    //  "defaultValue": 80,
+    //  "metadata": {
+    //    "description": "Front end, public port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"frontEndLoadBalancedAppPort2": {
+    //  "type": "int",
+    //  "defaultValue": 443,
+    //  "metadata": {
+    //    "description": "Front end, public port 2 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"backEndLoadBalancedAppPort1": {
+    //  "type": "int",
+    //  "defaultValue": 80,
+    //  "metadata": {
+    //    "description": "Back end, private port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"backEndLoadBalancedAppPort2": {
+    //  "type": "int",
+    //  "defaultValue": 443,
+    //  "metadata": {
+    //    "description": "Back end, private port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
     "storageAccountType": {
       "type": "string",
       "allowedValues": [
@@ -325,6 +325,7 @@
       "tcpGatewayPort": "[parameters('fabricTcpGatewayPort')]",
       "httpGatewayPort": "[parameters('fabricHttpGatewayPort')]",
       "clusterPorts": "1025-1027",
+      "applicationPorts" :  "20000-30000",
       "applicationStartPort": "20000",
       "applicationEndPort": "30000",
       "ephemeralStartPort": "49152",
@@ -512,34 +513,6 @@
       "properties": {
         "securityRules": [
           {
-            "comments": "allow public application port 1",
-            "name": "allowAppPort1",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2000,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "comments": "allow public application port 2",
-            "name": "allowAppPort2",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2010,
-              "direction": "Inbound"
-            }
-          },
-          {
             "comments": "allow ports within vnet that are used by the fabric to talk between nodes",
             "name": "allowSvcFabCluser",
             "properties": {
@@ -610,6 +583,20 @@
             }
           },
           {
+            "comments": "allow sf application ports",
+            "name": "allowSvcFabAppPorts",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[variables('serviceFabricPorts')['applicationPorts']]",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3952,
+              "direction": "Inbound"
+            }
+          },
+          {
             "comments": "block all traffic except what we've explicitly allowed",
             "name": "blockAll",
             "properties": {
@@ -637,34 +624,6 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
-          {
-            "comments": "allow private application port 1 within the Vnet",
-            "name": "allowAppPort1",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('backEndLoadBalancedAppPort1')]",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2000,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "comments": "allow private application port 2 within the Vnet",
-            "name": "allowAppPort2",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('backEndLoadBalancedAppPort2')]",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2010,
-              "direction": "Inbound"
-            }
-          },
           {
             "comments": "allow ports within vnet that are used by the fabric to talk between nodes",
             "name": "allowSvcFabCluser",
@@ -722,13 +681,13 @@
             }
           },
           {
-            "comments": "allow sf reverse proxy",
-            "name": "allowReverseProxy",
+            "comments": "allow sf application ports",
+            "name": "allowSvcFabAppPorts",
             "properties": {
               "protocol": "*",
               "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('SFReverseProxyPort')]",
-              "sourceAddressPrefix": "*",
+              "destinationPortRange": "[variables('serviceFabricPorts')['applicationPorts']]",
+              "sourceAddressPrefix": "VirtualNetwork",
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 3951,
@@ -869,44 +828,6 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "AppPortLBRule1",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('frontEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('frontEndLoadBalancerID'),'/probes/AppPortProbe1')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortLBRule2",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('frontEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('frontEndLoadBalancerID'),'/probes/AppPortProbe2')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
             "name": "LBSFReverseProxyRule",
             "properties": {
               "backendAddressPool": {
@@ -928,24 +849,6 @@
 
         ],
         "probes": [
-          {
-            "name": "AppPortProbe1",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortProbe2",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "protocol": "Tcp"
-            }
-          },
           {
             "name": "SFReverseProxyProbe",
             "properties": {
@@ -991,44 +894,6 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "AppPortLBRule1",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('backEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('backEndLoadBalancedAppPort1')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('backEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('backEndLoadBalancedAppPort1')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('backEndLoadBalancerID'),'/probes/AppPortProbe1')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortLBRule2",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('backEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('backEndLoadBalancedAppPort2')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('backEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('backEndLoadBalancedAppPort2')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('backEndLoadBalancerID'),'/probes/AppPortProbe2')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
             "name": "LBSFReverseProxyRule",
             "properties": {
               "backendAddressPool": {
@@ -1049,24 +914,6 @@
           }
         ],
         "probes": [
-          {
-            "name": "AppPortProbe1",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('backEndLoadBalancedAppPort1')]",
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortProbe2",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('backEndLoadBalancedAppPort2')]",
-              "protocol": "Tcp"
-            }
-          },
           {
             "name": "SFReverseProxyProbe",
             "properties": {
