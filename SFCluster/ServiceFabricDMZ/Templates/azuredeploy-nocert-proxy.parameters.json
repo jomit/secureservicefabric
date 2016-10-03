@@ -17,18 +17,6 @@
     "fabricHttpGatewayPort": {
       "value": 19080
     },
-    //"frontEndLoadBalancedAppPort1": {
-    //  "value": 80
-    //},
-    //"frontEndLoadBalancedAppPort2": {
-    //  "value": 443
-    //},
-    //"backEndLoadBalancedAppPort1": {
-    //  "value": 80
-    //},
-    //"backEndLoadBalancedAppPort2": {
-    //  "value": 443
-    //},
     "storageAccountType": {
       "value": "Standard_LRS"
     },
