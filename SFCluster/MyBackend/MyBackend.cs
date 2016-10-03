@@ -22,7 +22,11 @@ namespace MyBackend
 
         public async Task<IEnumerable<string>> GetData()
         {
-            return new List<string>() { "A", "B", "C" };
+            ServiceEventSource.Current.Message("Generating Data");
+
+            var data = new List<string>() { "A", "B", "C" };
+
+            return data;
         }
 
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()

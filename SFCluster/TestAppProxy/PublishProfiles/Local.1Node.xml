@@ -8,4 +8,7 @@
   -->
   <ClusterConnectionParameters />
   <ApplicationParameterFile Path="..\ApplicationParameters\Local.1Node.xml" />
+  <UpgradeDeployment Mode="UnmonitoredAuto">
+    <Parameters UpgradeReplicaSetCheckTimeoutSec="1" Force="True" ForceRestart="True" />
+  </UpgradeDeployment>
 </PublishProfile>
