@@ -31,15 +31,11 @@
     <Content Include="Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\azuredeploy-nocert-proxy.json" />
     <Content Include="Templates\azuredeploy-nocert-proxy.parameters.json" />
-    <Content Include="Templates\azuredeploy-proxy.json" />
-    <Content Include="Templates\azuredeploy-proxy.parameters.json" />
     <Content Include="Templates\azuredeploy.json" />
     <Content Include="Templates\azuredeploy.parameters.json" />
     <None Include="SetupKeyVault-Certificate.ps1" />
     <None Include="Templates\azuredeploy-nocert.json" />
     <None Include="Templates\azuredeploy-nocert.parameters.json" />
-    <None Include="Templates\quickstart.json" />
-    <None Include="Templates\quickstart.parameters.json" />
   </ItemGroup>
   <Target Name="GetReferenceAssemblyPaths" />
 </Project>
