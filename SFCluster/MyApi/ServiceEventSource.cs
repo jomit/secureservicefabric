@@ -142,16 +142,16 @@ namespace MyApi
         // and other statistics.
         private const int ServiceRequestStartEventId = 5;
         [Event(ServiceRequestStartEventId, Level = EventLevel.Informational, Message = "Service request '{0}' started", Keywords = Keywords.Requests)]
-        public void ServiceRequestStart(string requestTypeName)
+        public void ServiceRequestStart(string requestTypeName, string correlationId, string serviceDetails)
         {
-            WriteEvent(ServiceRequestStartEventId, requestTypeName);
+            WriteEvent(ServiceRequestStartEventId, requestTypeName, correlationId, serviceDetails);
         }
 
         private const int ServiceRequestStopEventId = 6;
         [Event(ServiceRequestStopEventId, Level = EventLevel.Informational, Message = "Service request '{0}' finished", Keywords = Keywords.Requests)]
-        public void ServiceRequestStop(string requestTypeName, string exception = "")
+        public void ServiceRequestStop(string requestTypeName, string correlationId, string serviceDetails, string exception = "")
         {
-            WriteEvent(ServiceRequestStopEventId, requestTypeName, exception);
+            WriteEvent(ServiceRequestStopEventId, requestTypeName, correlationId, serviceDetails, exception);
         }
         #endregion
 

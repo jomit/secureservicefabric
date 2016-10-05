@@ -65,7 +65,7 @@ namespace MyBackend
         }
 
         [NonEvent]
-        public void ServiceMessage(StatelessService service, string message, params object[] args)
+        public void ServiceMessage(StatelessService service, string message, string correlationId, params object[] args)
         {
             if (this.IsEnabled())
             {
@@ -78,7 +78,8 @@ namespace MyBackend
                     service.Context.CodePackageActivationContext.ApplicationName,
                     service.Context.CodePackageActivationContext.ApplicationTypeName,
                     service.Context.NodeContext.NodeName,
-                    finalMessage);
+                    finalMessage,
+                    correlationId);
             }
         }
 
@@ -99,10 +100,11 @@ namespace MyBackend
             string applicationName,
             string applicationTypeName,
             string nodeName,
-            string message)
+            string message,
+            string correlationId)
         {
 #if !UNSAFE
-            WriteEvent(ServiceMessageEventId, serviceName, serviceTypeName, replicaOrInstanceId, partitionId, applicationName, applicationTypeName, nodeName, message);
+            WriteEvent(ServiceMessageEventId, serviceName, serviceTypeName, replicaOrInstanceId, partitionId, applicationName, applicationTypeName, nodeName, message, correlationId);
 #else
             const int numArgs = 8;
             fixed (char* pServiceName = serviceName, pServiceTypeName = serviceTypeName, pApplicationName = applicationName, pApplicationTypeName = applicationTypeName, pNodeName = nodeName, pMessage = message)

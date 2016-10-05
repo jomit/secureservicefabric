@@ -1,6 +1,8 @@
 ﻿using Common;
 using Microsoft.ServiceFabric.Services.Client;
 using Microsoft.ServiceFabric.Services.Remoting.Client;
+using Microsoft.ServiceFabric.Services.Remoting.FabricTransport.Runtime;
+using MyApi.Filter;
 using MyBackend.Domain;
 using System;
 using System.Collections.Generic;
@@ -23,10 +25,9 @@ namespace MyApi.Controllers
         {
             var builder = new ServiceUriBuilder(BackendServiceName);
             var backendServiceClient = ServiceProxy.Create<IMyBackend>(builder.ToUri());
-
             try
             {
-                return await backendServiceClient.GetData();
+                return await backendServiceClient.GetData(ServiceTracingContext.GetRequestCorrelationId());
             }
             catch (Exception ex)
             {

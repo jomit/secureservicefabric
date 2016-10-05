@@ -8,6 +8,8 @@ using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using MyBackend.Domain;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
+using Common;
+using System.Runtime.Remoting.Messaging;
 
 namespace MyBackend
 {
@@ -20,9 +22,9 @@ namespace MyBackend
             : base(context)
         { }
 
-        public async Task<IEnumerable<string>> GetData()
+        public async Task<IEnumerable<string>> GetData(string correlationId)
         {
-            ServiceEventSource.Current.Message("Generating Data");
+            ServiceEventSource.Current.ServiceMessage(this, "Generating Data", correlationId);
 
             var data = new List<string>() { "A", "B", "C" };
 

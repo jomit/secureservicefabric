@@ -28,7 +28,6 @@ namespace MyApi
                 {
                     aiListener = new ApplicationInsightsEventListener(configProvider, new FabricHealthReporter(ApplicationInsightsEventListenerId));
                 }
-
                 ServiceRuntime.RegisterServiceAsync("MyApiType",
                     context => new MyApi(context)).GetAwaiter().GetResult();
 

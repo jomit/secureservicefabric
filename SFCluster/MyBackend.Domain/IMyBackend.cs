@@ -9,6 +9,6 @@ namespace MyBackend.Domain
 {
     public interface IMyBackend : IService
     {
-        Task<IEnumerable<string>> GetData();
+        Task<IEnumerable<string>> GetData(string correlationId);
     }
 }
