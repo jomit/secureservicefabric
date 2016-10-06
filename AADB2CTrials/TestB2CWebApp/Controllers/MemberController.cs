@@ -21,7 +21,6 @@ namespace TestB2CWebApp.Controllers
         {
             try
             {
-
                 var bootstrapContext = ClaimsPrincipal.Current.Identities.First().BootstrapContext as System.IdentityModel.Tokens.BootstrapContext;
 
                 HttpClient client = new HttpClient();
