@@ -17,6 +17,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.Event
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Diagnostics.EventListeners.Fabric", "Microsoft.Diagnostics.EventListeners.Fabric\Microsoft.Diagnostics.EventListeners.Fabric.csproj", "{2D19BF76-04E1-4969-AD66-984160D38E2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D537DC49-BF74-4A29-8984-3725D6428EC9}"
+	ProjectSection(SolutionItems) = preProject
+		analytics-query.txt = analytics-query.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

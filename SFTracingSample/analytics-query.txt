@@ -1,0 +1,18 @@
+customEvents
+| order by timestamp desc
+| limit 10
+| order by  timestamp asc
+| project customDimensions.correlationId, 
+    timestamp,
+    name,
+    customDimensions.Message,
+    customDimensions.serviceDetails,
+    client_Type,
+    client_IP ,
+    client_City,
+    client_StateOrProvince,
+    client_CountryOrRegion,
+    appName 
+
+customEvents
+| count
