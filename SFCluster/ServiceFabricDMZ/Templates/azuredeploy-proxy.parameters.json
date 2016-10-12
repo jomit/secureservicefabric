@@ -1,0 +1,75 @@
+﻿{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "clusterName": {
+      "value": "jacksch"
+    },
+    "adminUserName": {
+      "value": "jomit"
+    },
+    "adminPassword": {
+      "value": "book@cafe123"
+    },
+    "fabricTcpGatewayPort": {
+      "value": 19000
+    },
+    "fabricHttpGatewayPort": {
+      "value": 19080
+    },
+    "storageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmLogStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "applicationDiagnosticsStorageAccountType": {
+      "value": "Standard_LRS"
+    },
+    "vmssDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "frontEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "frontEndVMInstanceCount": {
+      "value": 3
+    },
+    "backEndVMSize": {
+      "value": "Standard_D2"
+    },
+    "backEndVMInstanceCount": {
+      "value": 3
+    },
+    "managementVMSize": {
+      "value": "Standard_D2"
+    },
+    "managementVMInstanceCount": {
+      "value": 3
+    },
+    "clusterDurabilityLevel": {
+      "value": "Bronze"
+    },
+    "clusterReliabilityLevel": {
+      "value": "Bronze"
+    },
+    "certificateStorevalue": {
+      "value": "My"
+    },
+    "certificateThumbprint": {
+      "value": "CF596D9A688362B4A2085CDFA120E8A1790DC606"
+    },
+    "sourceVaultvalue": {
+      "value": "/subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/appCerts"
+    },
+    "certificateUrlvalue": {
+      "value": "https://appcerts.vault.azure.net:443/secrets/jomitschcert/7fdd577abc984738b77a888c22412cf6"
+    },
+    "clusterProtectionLevel": {
+      "value": "EncryptAndSign"
+    },
+    "SFReverseProxyPort": {
+       "value": 443
+    }
+  }
+}

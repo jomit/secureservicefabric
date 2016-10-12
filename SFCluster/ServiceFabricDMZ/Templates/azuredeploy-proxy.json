@@ -34,34 +34,34 @@
         "description": "Port for Http Client Connection end point to perform management operations on this cluster"
       }
     },
-    "frontEndLoadBalancedAppPort1": {
-      "type": "int",
-      "defaultValue": 80,
-      "metadata": {
-        "description": "Front end, public port 1 to use. Replace it with what your application uses"
-      }
-    },
-    "frontEndLoadBalancedAppPort2": {
-      "type": "int",
-      "defaultValue": 443,
-      "metadata": {
-        "description": "Front end, public port 2 to use. Replace it with what your application uses"
-      }
-    },
-    "backEndLoadBalancedAppPort1": {
-      "type": "int",
-      "defaultValue": 80,
-      "metadata": {
-        "description": "Back end, private port 1 to use. Replace it with what your application uses"
-      }
-    },
-    "backEndLoadBalancedAppPort2": {
-      "type": "int",
-      "defaultValue": 443,
-      "metadata": {
-        "description": "Back end, private port 1 to use. Replace it with what your application uses"
-      }
-    },
+    //"frontEndLoadBalancedAppPort1": {
+    //  "type": "int",
+    //  "defaultValue": 80,
+    //  "metadata": {
+    //    "description": "Front end, public port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"frontEndLoadBalancedAppPort2": {
+    //  "type": "int",
+    //  "defaultValue": 443,
+    //  "metadata": {
+    //    "description": "Front end, public port 2 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"backEndLoadBalancedAppPort1": {
+    //  "type": "int",
+    //  "defaultValue": 80,
+    //  "metadata": {
+    //    "description": "Back end, private port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
+    //"backEndLoadBalancedAppPort2": {
+    //  "type": "int",
+    //  "defaultValue": 443,
+    //  "metadata": {
+    //    "description": "Back end, private port 1 to use. Replace it with what your application uses"
+    //  }
+    //},
     "storageAccountType": {
       "type": "string",
       "allowedValues": [
@@ -218,6 +218,13 @@
       "metadata": {
         "description": "Protection level.Three values are allowed - EncryptAndSign, Sign, None. It is best to keep the default of EncryptAndSign, unless you have a need not to"
       }
+    },
+    "SFReverseProxyPort": {
+      "type": "int",
+      "defaultValue": 19008,
+      "metadata": {
+        "description": "Endpoint for Service Fabric Reverse proxy"
+      }
     }
   },
   "variables": {
@@ -277,7 +284,7 @@
     "backEndLoadBalancer": {
       "Name": "BackEndLoadBalancer",
       "lbIPAddress": "192.100.2.4",
-      "IPConfig": "[concat(variables('backEndLoadBalancerID'),'/frontendIPConfigurations/LoadBalancerFrontend-internal')]",
+      "IPConfig": "[concat(variables('backEndLoadBalancerID'),'/frontendIPConfigurations/LoadBalancerBackend-internal')]",
       "PoolID": "[concat(variables('backEndLoadBalancerID'),'/backendAddressPools/LoadBalancerBEAddressPool')]",
       "ProbeID": "[concat(variables('backEndLoadBalancerID'),'/probes/FabricGatewayProbe')]",
       "HttpProbeID": "[concat(variables('backEndLoadBalancerID'),'/probes/FabricHttpGatewayProbe')]"
@@ -318,30 +325,25 @@
       "tcpGatewayPort": "[parameters('fabricTcpGatewayPort')]",
       "httpGatewayPort": "[parameters('fabricHttpGatewayPort')]",
       "clusterPorts": "1025-1027",
+      "applicationPorts": "20000-30000",
       "applicationStartPort": "20000",
       "applicationEndPort": "30000",
       "ephemeralStartPort": "49152",
       "ephemeralEndPort": "65534"
     },
 
-    "jumpBoxVM": {
-      "Name": "[concat(parameters('clusterName'), '-vmJUMP')]",
-      "nicName": "[concat(parameters('clusterName'), '-nicJUMP')]",
-      "pipName": "[concat(parameters('clusterName'),'-pipJUMP')]",
-      "AddressType": "Static",
-      "ipAddr": "192.100.3.4",
-      "DNS": "[toLower(concat(parameters('clusterName'), 'JUMP'))]",
-      "TypeSize": "Standard_D2",
-      "StorageAccountName": "[toLower(concat(uniqueString(resourceGroup().id), 'JUMP' ))]"
-    },
-
-    "vmssOverProvision": "false"
+    "vmssOverProvision": "false",
+    "vmssApiVersion": "2016-03-30",
+    "lbApiVersion": "2015-06-15",
+    "vNetApiVersion": "2015-06-15",
+    "storageApiVersion": "2016-01-01",
+    "publicIPApiVersion": "2015-06-15"
   },
   "resources": [
     /* Storage accounts */
     {
       "comments": "Storage accounts for all VM Scale Sets",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[concat(variables('storageAccountNameArray')[copyIndex()], variables('storageAccountSuffix'))]",
       "location": "[resourceGroup().location]",
@@ -349,8 +351,10 @@
         "name": "storageLoop",
         "count": "[length(variables('storageAccountNameArray'))]"
       },
-      "properties": {
-        "accountType": "[parameters('storageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('storageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -358,12 +362,14 @@
     },
     {
       "comments": "Log storage account for VM diagnostics and the jump box OS disk",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('vmLogStorageAccountName')]",
       "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('vmLogStorageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('vmLogStorageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -371,25 +377,14 @@
     },
     {
       "comments": "Diagnostics storage account for Service Fabric Clusters",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('storageApiVersion')]",
       "type": "Microsoft.Storage/storageAccounts",
       "name": "[variables('applicationDiagnosticsStorageAccountName')]",
       "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('vmLogStorageAccountType')]"
-      },
-      "tags": {
-        "clusterName": "[parameters('clusterName')]"
-      }
-    },
-    {
-      "comments": "Jump Box VHD Storage account",
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('jumpBoxVM')['StorageAccountName']]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "accountType": "[parameters('storageAccountType')]"
+      "properties": {},
+      "kind": "Storage",
+      "sku": {
+        "name": "[parameters('vmLogStorageAccountType')]"
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"
@@ -490,20 +485,6 @@
             }
           },
           {
-            "comments": "allow RDP into the Jumpbox from the internet",
-            "name": "allowJumpBoxRDP",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "3389",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "[variables('jumpBoxVM')['ipAddr']]",
-              "access": "Allow",
-              "priority": 3960,
-              "direction": "Inbound"
-            }
-          },
-          {
             "comments": "block all traffic except what we've explicitly allowed",
             "name": "blockAll",
             "properties": {
@@ -531,34 +512,6 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
-          {
-            "comments": "allow public application port 1",
-            "name": "allowAppPort1",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2000,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "comments": "allow public application port 2",
-            "name": "allowAppPort2",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "sourceAddressPrefix": "*",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2010,
-              "direction": "Inbound"
-            }
-          },
           {
             "comments": "allow ports within vnet that are used by the fabric to talk between nodes",
             "name": "allowSvcFabCluser",
@@ -612,6 +565,34 @@
               "destinationAddressPrefix": "*",
               "access": "Allow",
               "priority": 3950,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "comments": "allow sf reverse proxy",
+            "name": "allowReverseProxy",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[parameters('SFReverseProxyPort')]",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3951,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "comments": "allow sf application ports",
+            "name": "allowSvcFabAppPorts",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[variables('serviceFabricPorts')['applicationPorts']]",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3952,
               "direction": "Inbound"
             }
           },
@@ -644,34 +625,6 @@
       "properties": {
         "securityRules": [
           {
-            "comments": "allow private application port 1 within the Vnet",
-            "name": "allowAppPort1",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('backEndLoadBalancedAppPort1')]",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2000,
-              "direction": "Inbound"
-            }
-          },
-          {
-            "comments": "allow private application port 2 within the Vnet",
-            "name": "allowAppPort2",
-            "properties": {
-              "protocol": "*",
-              "sourcePortRange": "*",
-              "destinationPortRange": "[parameters('backEndLoadBalancedAppPort2')]",
-              "sourceAddressPrefix": "VirtualNetwork",
-              "destinationAddressPrefix": "*",
-              "access": "Allow",
-              "priority": 2010,
-              "direction": "Inbound"
-            }
-          },
-          {
             "comments": "allow ports within vnet that are used by the fabric to talk between nodes",
             "name": "allowSvcFabCluser",
             "properties": {
@@ -728,6 +681,20 @@
             }
           },
           {
+            "comments": "allow sf application ports",
+            "name": "allowSvcFabAppPorts",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "[variables('serviceFabricPorts')['applicationPorts']]",
+              "sourceAddressPrefix": "VirtualNetwork",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 3951,
+              "direction": "Inbound"
+            }
+          },
+          {
             "comments": "block all traffic except what we've explicitly allowed",
             "name": "blockAll",
             "properties": {
@@ -750,7 +717,7 @@
 
     /* Virtual Network */
     {
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('vNetApiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('virtualNetworkName')]",
       "location": "[resourceGroup().location]",
@@ -802,7 +769,7 @@
     /* Public IP's for frontend and mangement endpoints */
     {
       "comments": "Public IP for Front End",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('publicIPApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('frontEndPublicIP')['Name']]",
       "location": "[resourceGroup().location]",
@@ -817,8 +784,8 @@
       }
     },
     {
-      "comments": "Public IP for Back End",
-      "apiVersion": "2015-06-15",
+      "comments": "Public IP for Management",
+      "apiVersion": "[variables('publicIPApiVersion')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('managementPublicIP')['Name']]",
       "location": "[resourceGroup().location]",
@@ -836,7 +803,7 @@
     /* Load Balancers for frontend, backend and management nodes*/
     {
       "comments": "Front End Load Balancer",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('frontEndLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -861,60 +828,33 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "AppPortLBRule1",
+            "name": "LBSFReverseProxyRule",
             "properties": {
               "backendAddressPool": {
                 "id": "[variables('frontEndLoadBalancer')['PoolID']]"
               },
-              "backendPort": "[parameters('frontEndLoadBalancedAppPort1')]",
+              "backendPort": "[parameters('SFReverseProxyPort')]",
               "enableFloatingIP": false,
               "frontendIPConfiguration": {
                 "id": "[variables('frontEndLoadBalancer')['IPConfig']]"
               },
-              "frontendPort": "[parameters('frontEndLoadBalancedAppPort1')]",
+              "frontendPort": "[parameters('SFReverseProxyPort')]",
               "idleTimeoutInMinutes": 5,
               "probe": {
-                "id": "[concat(variables('frontEndLoadBalancerID'),'/probes/AppPortProbe1')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortLBRule2",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('frontEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('frontEndLoadBalancedAppPort2')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('frontEndLoadBalancerID'),'/probes/AppPortProbe2')]"
+                "id": "[concat(variables('frontEndLoadBalancerID'),'/probes/SFReverseProxyProbe')]"
               },
               "protocol": "Tcp"
             }
           }
+
         ],
         "probes": [
           {
-            "name": "AppPortProbe1",
+            "name": "SFReverseProxyProbe",
             "properties": {
               "intervalInSeconds": 5,
               "numberOfProbes": 2,
-              "port": "[parameters('frontEndLoadBalancedAppPort1')]",
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortProbe2",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('frontEndLoadBalancedAppPort2')]",
+              "port": "[parameters('SFReverseProxyPort')]",
               "protocol": "Tcp"
             }
           }
@@ -926,7 +866,7 @@
     },
     {
       "comments": "Backend Load Balancer (Private)",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('backEndLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -936,7 +876,7 @@
       "properties": {
         "frontendIPConfigurations": [
           {
-            "name": "LoadBalancerFrontend-internal",
+            "name": "LoadBalancerBackend-internal",
             "properties": {
               "subnet": {
                 "id": "[variables('backEndSubnet')['Ref']]"
@@ -954,39 +894,20 @@
         ],
         "loadBalancingRules": [
           {
-            "name": "AppPortLBRule1",
+            "name": "LBSFReverseProxyRule",
             "properties": {
               "backendAddressPool": {
                 "id": "[variables('backEndLoadBalancer')['PoolID']]"
               },
-              "backendPort": "[parameters('backEndLoadBalancedAppPort1')]",
+              "backendPort": "[parameters('SFReverseProxyPort')]",
               "enableFloatingIP": false,
               "frontendIPConfiguration": {
                 "id": "[variables('backEndLoadBalancer')['IPConfig']]"
               },
-              "frontendPort": "[parameters('backEndLoadBalancedAppPort1')]",
+              "frontendPort": "[parameters('SFReverseProxyPort')]",
               "idleTimeoutInMinutes": 5,
               "probe": {
-                "id": "[concat(variables('backEndLoadBalancerID'),'/probes/AppPortProbe1')]"
-              },
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortLBRule2",
-            "properties": {
-              "backendAddressPool": {
-                "id": "[variables('backEndLoadBalancer')['PoolID']]"
-              },
-              "backendPort": "[parameters('backEndLoadBalancedAppPort2')]",
-              "enableFloatingIP": false,
-              "frontendIPConfiguration": {
-                "id": "[variables('backEndLoadBalancer')['IPConfig']]"
-              },
-              "frontendPort": "[parameters('backEndLoadBalancedAppPort2')]",
-              "idleTimeoutInMinutes": 5,
-              "probe": {
-                "id": "[concat(variables('backEndLoadBalancerID'),'/probes/AppPortProbe2')]"
+                "id": "[concat(variables('backEndLoadBalancerID'),'/probes/SFReverseProxyProbe')]"
               },
               "protocol": "Tcp"
             }
@@ -994,20 +915,11 @@
         ],
         "probes": [
           {
-            "name": "AppPortProbe1",
+            "name": "SFReverseProxyProbe",
             "properties": {
               "intervalInSeconds": 5,
               "numberOfProbes": 2,
-              "port": "[parameters('backEndLoadBalancedAppPort1')]",
-              "protocol": "Tcp"
-            }
-          },
-          {
-            "name": "AppPortProbe2",
-            "properties": {
-              "intervalInSeconds": 5,
-              "numberOfProbes": 2,
-              "port": "[parameters('backEndLoadBalancedAppPort2')]",
+              "port": "[parameters('SFReverseProxyPort')]",
               "protocol": "Tcp"
             }
           }
@@ -1019,7 +931,7 @@
     },
     {
       "comments": "Management Load Balancer",
-      "apiVersion": "2015-06-15",
+      "apiVersion": "[variables('lbApiVersion')]",
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('managementLoadBalancer')['Name']]",
       "location": "[resourceGroup().location]",
@@ -1080,6 +992,25 @@
               },
               "protocol": "Tcp"
             }
+          },
+          {
+            "name": "LBSFReverseProxyRule",
+            "properties": {
+              "backendAddressPool": {
+                "id": "[variables('managementLoadBalancer')['PoolID']]"
+              },
+              "backendPort": "[parameters('SFReverseProxyPort')]",
+              "enableFloatingIP": false,
+              "frontendIPConfiguration": {
+                "id": "[variables('managementLoadBalancer')['IPConfig']]"
+              },
+              "frontendPort": "[parameters('SFReverseProxyPort')]",
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(variables('managementLoadBalancerID'),'/probes/SFReverseProxyProbe')]"
+              },
+              "protocol": "Tcp"
+            }
           }
         ],
         "probes": [
@@ -1100,6 +1031,15 @@
               "port": "[variables('serviceFabricPorts')['httpGatewayPort']]",
               "protocol": "Tcp"
             }
+          },
+          {
+            "name": "SFReverseProxyProbe",
+            "properties": {
+              "intervalInSeconds": 5,
+              "numberOfProbes": 2,
+              "port": "[parameters('SFReverseProxyPort')]",
+              "protocol": "Tcp"
+            }
           }
         ]
       },
@@ -1111,7 +1051,7 @@
     /* VM Scale sets for frontend, backend and management nodes */
     {
       "comments": "VM Scale Set for fronend nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('frontEndNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1225,7 +1165,7 @@
     },
     {
       "comments": "VM Scale Set for backend nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('backEndNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1298,7 +1238,7 @@
           "osProfile": {
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "[parameters('adminUserName')]",
-            "computernamePrefix": "[variables('backEndNodes')['TypeName']]",
+            "computerNamePrefix": "[variables('backEndNodes')['TypeName']]",
             "secrets": [
               {
                 "sourceVault": {
@@ -1339,7 +1279,7 @@
     },
     {
       "comments": "VM Scale Set for management nodes",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "[variables('vmssApiVersion')]",
       "type": "Microsoft.Compute/virtualMachineScaleSets",
       "name": "[variables('managementNodes')['TypeName']]",
       "location": "[resourceGroup().location]",
@@ -1412,7 +1352,7 @@
           "osProfile": {
             "adminPassword": "[parameters('adminPassword')]",
             "adminUsername": "[parameters('adminUserName')]",
-            "computernamePrefix": "[variables('managementNodes')['TypeName']]",
+            "computerNamePrefix": "[variables('managementNodes')['TypeName']]",
             "secrets": [
               {
                 "sourceVault": {
@@ -1462,12 +1402,12 @@
         "[concat('Microsoft.Storage/storageAccounts/', variables('applicationDiagnosticsStorageAccountName'))]"
       ],
       "properties": {
-        "certificate": {
+        "clientCertificateCommonNames": [],
+        "clientCertificateThumbprints": [],
+        "httpApplicationGatewayCertificate": {
           "thumbprint": "[parameters('certificateThumbprint')]",
           "x509StoreName": "[parameters('certificateStoreValue')]"
         },
-        "clientCertificateCommonNames": [],
-        "clientCertificateThumbprints": [],
         "clusterState": "Default",
         "diagnosticsStorageAccountConfig": {
           "blobEndpoint": "[concat('https://',variables('applicationDiagnosticsStorageAccountName'),'.blob.core.windows.net/')]",
@@ -1476,18 +1416,8 @@
           "storageAccountName": "[variables('applicationDiagnosticsStorageAccountName')]",
           "tableEndpoint": "[concat('https://',variables('applicationDiagnosticsStorageAccountName'),'.table.core.windows.net/')]"
         },
-        "fabricSettings": [
-          {
-            "parameters": [
-              {
-                "name": "ClusterProtectionLevel",
-                "value": "[parameters('clusterProtectionLevel')]"
-              }
-            ],
-            "name": "Security"
-          }
-        ],
-        "managementEndpoint": "[concat('https://',reference(variables('managementPublicIP')['Name']).dnsSettings.fqdn,':',variables('serviceFabricPorts')['httpGatewayPort'])]",
+        "fabricSettings": [],
+        "managementEndpoint": "[concat('http://',reference(variables('managementPublicIP')['Name']).dnsSettings.fqdn,':',variables('serviceFabricPorts')['httpGatewayPort'])]",
         "nodeTypes": [
           {
             "name": "[variables('frontEndNodes')['TypeName']]",
@@ -1502,6 +1432,7 @@
               "startPort": "[variables('serviceFabricPorts')['ephemeralStartPort']]"
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
+            "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": false,
             "comments": "customize the placement properties for this node type",
             "placementProperties": {
@@ -1522,6 +1453,7 @@
               "startPort": "[variables('serviceFabricPorts')['ephemeralStartPort']]"
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
+            "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": false,
             "placementProperties": {
               "isDMZ": "false"
@@ -1541,6 +1473,7 @@
               "startPort": "[variables('serviceFabricPorts')['ephemeralStartPort']]"
             },
             "httpGatewayEndpointPort": "[variables('serviceFabricPorts')['httpGatewayPort']]",
+            "httpApplicationGatewayEndpointPort": "[parameters('SFReverseProxyPort')]",
             "isPrimary": true,
             "placementProperties": {
               "isDMZ": "false"
@@ -1551,104 +1484,6 @@
         "provisioningState": "Default",
         "reliabilityLevel": "[parameters('clusterReliabilityLevel')]",
         "vmImage": "Windows"
-      },
-      "tags": {
-        "clusterName": "[parameters('clusterName')]"
-      }
-    },
-
-    /* Jump Box Resources */
-    {
-      "comments": "Jump Box Public IP",
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('jumpBoxVM')['pipName']]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "publicIPAllocationMethod": "[variables('jumpBoxVM')['AddressType']]",
-        "dnsSettings": {
-          "domainNameLabel": "[toLower(variables('jumpBoxVM')['DNS'])]"
-        }
-      },
-      "tags": {
-        "clusterName": "[parameters('clusterName')]"
-      }
-    },
-    {
-      "comments": "Jump Box NIC",
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Network/networkInterfaces",
-      "name": "[variables('jumpBoxVM')['nicName']]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/publicIPAddresses/', variables('jumpBoxVM')['pipName'])]"
-      ],
-      "properties": {
-        "ipConfigurations": [
-          {
-            "name": "ipconfig1",
-            "properties": {
-              "privateIPAllocationMethod": "Dynamic",
-              "privateIPAddress": "[variables('jumpBoxVM')['ipAddr']]",
-              "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('jumpBoxVM')['pipName'])]"
-              },
-              "subnet": {
-                "id": "[variables('managementSubnet')['Ref']]"
-              }
-            }
-          }
-        ]
-      },
-      "tags": {
-        "clusterName": "[parameters('clusterName')]"
-      }
-    },
-    {
-      "comments": "Jump Box VM",
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[variables('jumpBoxVM')['Name']]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[concat('Microsoft.Storage/storageAccounts/', variables('jumpBoxVM')['StorageAccountName'])]",
-        "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('jumpBoxVM')['nicName'])]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[variables('jumpBoxVM')['TypeSize']]"
-        },
-        "osProfile": {
-          "computerName": "[variables('jumpBoxVM')['Name']]",
-          "adminUsername": "[parameters('adminUsername')]",
-          "adminPassword": "[parameters('adminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": "[variables('vmImageReference')]",
-          "osDisk": {
-            "name": "osdisk",
-            "vhd": {
-              "uri": "[concat('http://',variables('jumpBoxVM')['StorageAccountName'],'.blob.core.windows.net/vhds/', variables('jumpBoxVM')['Name'], '-osdisk.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('jumpBoxVM')['nicName'])]"
-            }
-          ]
-        },
-        "diagnosticsProfile": {
-          "bootDiagnostics": {
-            "enabled": "true",
-            "storageUri": "[concat('http://',variables('jumpBoxVM')['StorageAccountName'],'.blob.core.windows.net')]"
-          }
-        }
       },
       "tags": {
         "clusterName": "[parameters('clusterName')]"

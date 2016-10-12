@@ -3,14 +3,14 @@ Login-AzureRmAccount
 Select-AzureRmSubscription -SubscriptionName "Jomit's Internal Subscription"
 
 $KeyVaultName = 'appCerts'
-$KeyVaultSecretName = 'jomitsfcert'
+$KeyVaultSecretName = 'jackschcert'
 $ResourceGroupName = 'AllVaults'
 $Location = 'westus'
-$ClusterName = 'jomitsf'
+$ClusterName = 'jacksch'
 $CertDNSName = $ClusterName + '.' + $Location + '.cloudapp.azure.com'
 $Password = "pass@word1"
 
-New-AzureRmKeyVault -VaultName  $KeyVaultName -ResourceGroupName $ResourceGroupName -Location $Location -EnabledForDeployment
+#New-AzureRmKeyVault -VaultName  $KeyVaultName -ResourceGroupName $ResourceGroupName -Location $Location -EnabledForDeployment
 
 $SecurePassword = ConvertTo-SecureString -String $Password -AsPlainText -Force
 $CertFileFullPath = $pwd.Path + '\' + $CertDNSName + '.pfx'
@@ -40,5 +40,5 @@ Write-Host "Certificate Thumbprint : "$NewCert.Thumbprint
 
 
 #Source Vault Resource Id:  /subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/appCerts
-#Certificate URL :  https://appcerts.vault.azure.net:443/secrets/jomitsfcert/9eeb5ca4f44b49e3ae7c59129e9ae230
-#Certificate Thumbprint :  87AAA3D37BDBDC5FD05828FC97697D451E4C5FD4
+#Certificate URL :  https://appcerts.vault.azure.net:443/secrets/jomitschcert/7fdd577abc984738b77a888c22412cf6
+#Certificate Thumbprint :  CF596D9A688362B4A2085CDFA120E8A1790DC606

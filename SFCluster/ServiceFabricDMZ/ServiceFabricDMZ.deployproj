@@ -29,6 +29,8 @@
       <Visible>False</Visible>
     </None>
     <Content Include="Deploy-AzureResourceGroup.ps1" />
+    <Content Include="Templates\azuredeploy-proxy.json" />
+    <Content Include="Templates\azuredeploy-proxy.parameters.json" />
     <Content Include="Templates\azuredeploy-nocert-proxy.json" />
     <Content Include="Templates\azuredeploy-nocert-proxy.parameters.json" />
     <Content Include="Templates\azuredeploy.json" />
