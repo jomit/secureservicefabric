@@ -48,24 +48,24 @@ namespace MyApi.Controllers
         {
             var builder = new ServiceUriBuilder(BackendServiceName);
 
-            var x509Credentials = new X509Credentials
-            {
-                FindType = X509FindType.FindByThumbprint,
-                FindValue = "053a87f6c1e3d08ec7fc28522a2cf1921c9daa5e",
-                StoreLocation = StoreLocation.LocalMachine,
-                StoreName = "My",
-                ProtectionLevel = ProtectionLevel.EncryptAndSign
-            };
-            x509Credentials.RemoteCommonNames.Add("jacksch.westus.cloudapp.azure.com");
+            //var x509Credentials = new X509Credentials
+            //{
+            //    FindType = X509FindType.FindByThumbprint,
+            //    FindValue = "053a87f6c1e3d08ec7fc28522a2cf1921c9daa5e",
+            //    StoreLocation = StoreLocation.LocalMachine,
+            //    StoreName = "My",
+            //    ProtectionLevel = ProtectionLevel.EncryptAndSign
+            //};
+            //x509Credentials.RemoteCommonNames.Add("jacksch.westus.cloudapp.azure.com");
 
-            var transportSettings = new FabricTransportSettings
-            {
-                SecurityCredentials = x509Credentials,
-                MaxMessageSize = 10000000
-            };
+            //var transportSettings = new FabricTransportSettings
+            //{
+            //    SecurityCredentials = x509Credentials,
+            //    MaxMessageSize = 10000000
+            //};
 
             var serviceProxyFactory = new ServiceProxyFactory((c) =>
-                                      new FabricTransportServiceRemotingClientFactory(transportSettings));
+                                      new FabricTransportServiceRemotingClientFactory());
 
             return serviceProxyFactory.CreateServiceProxy<IMyBackend>(builder.ToUri());
         }

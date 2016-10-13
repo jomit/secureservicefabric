@@ -35,6 +35,8 @@
     <Content Include="Templates\azuredeploy-nocert-proxy.parameters.json" />
     <Content Include="Templates\azuredeploy.json" />
     <Content Include="Templates\azuredeploy.parameters.json" />
+    <None Include="SetCertACL.ps1" />
+    <None Include="CreateAndInstallCert.ps1" />
     <None Include="SetupKeyVault-Certificate.ps1" />
     <None Include="Templates\azuredeploy-nocert.json" />
     <None Include="Templates\azuredeploy-nocert.parameters.json" />

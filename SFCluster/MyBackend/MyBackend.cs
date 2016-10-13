@@ -36,15 +36,15 @@ namespace MyBackend
 
         protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
         {
-            FabricTransportListenerSettings listenerSettings = new FabricTransportListenerSettings
-            {
-                MaxMessageSize = 10000000,
-                SecurityCredentials = GetSecurityCredentials()
-            };
+            //FabricTransportListenerSettings listenerSettings = new FabricTransportListenerSettings
+            //{
+            //    MaxMessageSize = 10000000,
+            //    SecurityCredentials = GetSecurityCredentials()
+            //};
 
             return new ServiceInstanceListener[]
             {
-                new ServiceInstanceListener((context) => new FabricTransportServiceRemotingListener(context, this, listenerSettings))
+                new ServiceInstanceListener((context) => new FabricTransportServiceRemotingListener(context, this))
             };
         }
 
