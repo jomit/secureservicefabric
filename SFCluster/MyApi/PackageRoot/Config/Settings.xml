@@ -5,5 +5,14 @@
   <Section Name="ApplicationInsightsEventListener">
     <Parameter Name="InstrumentationKey" Value="92d18cdc-ffb2-4ba2-b3c9-e0371b9d1b66" />
   </Section>
-  
+  <!--<Section Name="TransportSettings">
+    <Parameter Name="MaxMessageSize" Value="10000000" />
+    <Parameter Name="SecurityCredentialsType" Value="X509" />
+    <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
+    <Parameter Name="CertificateFindValue" Value="053a87f6c1e3d08ec7fc28522a2cf1921c9daa5e" />
+    <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
+    <Parameter Name="CertificateStoreName" Value="My" />
+    <Parameter Name="CertificateProtectionLevel" Value="EncryptAndSign" />
+    <Parameter Name="CertificateRemoteCommonNames" Value="jacksch.westus.cloudapp.azure.com" />
+  </Section>-->
 </Settings>
