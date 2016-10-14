@@ -57,13 +57,13 @@
       "value": "My"
     },
     "certificateThumbprint": {
-      "value": "CF596D9A688362B4A2085CDFA120E8A1790DC606"
+      "value": "2DD0A569FD7D117BFA4BF9815D184C43E55BE43C"
     },
     "sourceVaultValue": {
       "value": "/subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/appCerts"
     },
     "certificateUrlValue": {
-      "value": "https://appcerts.vault.azure.net:443/secrets/jomitschcert/7fdd577abc984738b77a888c22412cf6"
+      "value": "https://appcerts.vault.azure.net:443/secrets/jackschcert/dd0c2b330a9b472598bf6fe951d123e5"
     },
     "clusterProtectionLevel": {
       "value": "EncryptAndSign"
