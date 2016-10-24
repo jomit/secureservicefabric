@@ -9,7 +9,7 @@
     <Parameter Name="MaxMessageSize" Value="10000000" />
     <Parameter Name="SecurityCredentialsType" Value="X509" />
     <Parameter Name="CertificateFindType" Value="FindByThumbprint" />
-    <Parameter Name="CertificateFindValue" Value="ece0a281ca9ce7d85653334946c03518c12121ea" />
+    <Parameter Name="CertificateFindValue" Value="A226EA7B883B4D7DA32EB16C5981407ABA274532" />
     <Parameter Name="CertificateStoreLocation" Value="LocalMachine" />
     <Parameter Name="CertificateStoreName" Value="My" />
     <Parameter Name="CertificateProtectionLevel" Value="EncryptAndSign" />

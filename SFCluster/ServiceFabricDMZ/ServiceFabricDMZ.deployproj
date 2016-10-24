@@ -25,6 +25,7 @@
   <Import Condition=" Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets') " Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Deployment\1.1\DeploymentProject.targets" />
   <!-- vertag<:>end -->
   <ItemGroup>
+    <None Include="SetupKeyVault-Certificate.ps1" />
     <None Include="Deployment.targets">
       <Visible>False</Visible>
     </None>
@@ -37,7 +38,7 @@
     <Content Include="Templates\azuredeploy.parameters.json" />
     <None Include="SetCertACL.ps1" />
     <None Include="CreateAndInstallCert.ps1" />
-    <None Include="SetupKeyVault-Certificate.ps1" />
+    <None Include="_Old.ps1" />
     <None Include="Templates\azuredeploy-nocert.json" />
     <None Include="Templates\azuredeploy-nocert.parameters.json" />
   </ItemGroup>
