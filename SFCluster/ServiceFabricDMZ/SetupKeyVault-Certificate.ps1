@@ -1,12 +1,14 @@
-﻿Login-AzureRmAccount
+﻿cd "C:\github\secureservicefabric\SFCluster\ServiceFabricDMZ"
+
+Login-AzureRmAccount
 
 Select-AzureRmSubscription -SubscriptionName "Jomit's Internal Subscription"
 
 $KeyVaultName = 'appCerts'
-$KeyVaultSecretName = 'jackschcert'
+$KeyVaultSecretName = 'jomitsf'
 $ResourceGroupName = 'AllVaults'
 $Location = 'westus'
-$ClusterName = 'jacksch'
+$ClusterName = 'jomitsf'
 $CertDNSName = $ClusterName + '.' + $Location + '.cloudapp.azure.com'
 $Password = "pass@word1"
 $CertFileFullPath = $pwd.Path + '\' + $CertDNSName + '.pfx'
@@ -16,17 +18,19 @@ $CertFileFullPath = $pwd.Path + '\' + $CertDNSName + '.pfx'
 #New-AzureRmKeyVault -VaultName  $KeyVaultName -ResourceGroupName $ResourceGroupName -Location $Location -EnabledForDeployment
 
 
+
+
 ## 2) Create Certificate
 .\CreateAndInstallCert.ps1 $CertDNSName $Password -Install
 
 
 
 ## 3) Export .pfx file
-$Thumbprint = "‎‎a226ea7b883b4d7da32eb16c5981407aba274532"
+$Thumbprint = "‎‎‎a6e85f72174d91581d7d86a8d3e4ff1abcb66601"
 $CertPath = "Cert:\LocalMachine\My\" + $Thumbprint 
 
 $SecurePassword = ConvertTo-SecureString -String $Password -AsPlainText -Force
-Get-Item Cert:\LocalMachine\My\a226ea7b883b4d7da32eb16c5981407aba274532 | Export-PfxCertificate -FilePath $CertFileFullPath -Password $SecurePassword
+Get-Item Cert:\LocalMachine\My\a6e85f72174d91581d7d86a8d3e4ff1abcb66601 | Export-PfxCertificate -FilePath $CertFileFullPath -Password $SecurePassword
 
 
 ## 4) 
@@ -49,11 +53,11 @@ Invoke-AddCertToKeyVault -SubscriptionId d0c802cd-23ce-4323-a183-5f6d9a84743e `
 
 
 #Name  : CertificateThumbprint
-#Value : A226EA7B883B4D7DA32EB16C5981407ABA274532
+#Value : A6E85F72174D91581D7D86A8D3E4FF1ABCB66601
 
 #Name  : SourceVault
 #Value : /subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/appCerts
 
 #Name  : CertificateURL
-#Value : https://appcerts.vault.azure.net:443/secrets/jackschcert/bbf155a676b146e68e39d3e089c70cfd
+#Value : https://appcerts.vault.azure.net:443/secrets/jomitsf/1dbb72d2155741bbb83a6df950121d16
 
