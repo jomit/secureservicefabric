@@ -1,0 +1,75 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "variables": {},
+    "resources": [
+      {
+        "apiVersion": "2016-09-01",
+        "type": "Microsoft.ServiceFabric/clusters",
+        "name": "jomitsf",
+        "location": "westus",
+        "dependsOn": [
+        ],
+        "properties": {
+          "certificate": {
+            "thumbprint": "<thumbprint>",
+            "x509StoreName": "My"
+          },
+          "azureActiveDirectory": {
+            "tenantId":"fbfbc60c-8fc7-489c-b5f9-127ae398433d",
+            "clusterApplication":"1578784d-e6bf-403b-a368-15a51c69dc1a",
+            "clientApplication":"cd9a3dc7-cfad-4756-9ac1-3cbd91c25602"
+          },
+          "clientCertificateCommonNames": [],
+          "clientCertificateThumbprints": [],
+          "clusterState": "Default",
+          "diagnosticsStorageAccountConfig": {
+            "storageAccountName": "sflogsjomitsf1818",
+            "blobEndpoint": "https://sflogsjomitsf1818.blob.core.windows.net/",
+            "protectedAccountKeyName": "StorageAccountKey1",
+            "queueEndpoint": "https://sflogsjomitsf1818.queue.core.windows.net/",
+            "tableEndpoint": "https://sflogsjomitsf1818.table.core.windows.net/"
+          },
+          "fabricSettings": [
+            {
+              "parameters": [
+                {
+                  "name": "ClusterProtectionLevel",
+                  "value": "EncryptAndSign"
+                }
+              ],
+              "name": "Security"
+            }
+          ],
+          "managementEndpoint": "https://jomitsf.westus.cloudapp.azure.com:19080",
+          "nodeTypes": [
+            {
+                "name": "main",
+                "clientConnectionEndpointPort": 19000,
+                "httpGatewayEndpointPort": 19080,
+                "applicationPorts": {
+                    "startPort": 20000,
+                    "endPort": 30000
+                },
+                "ephemeralPorts": {
+                    "startPort": 49152,
+                    "endPort": 65534
+                },
+                "isPrimary": true,
+                "vmInstanceCount": 3,
+                "durabilityLevel": "Bronze"
+            }
+          ],
+          "reliabilityLevel": "Bronze",
+          "vmImage": "Windows"
+        },
+        "tags": {
+          "clusterName": "jomitsf"
+        }
+      }
+    ],
+    "outputs": {
+    }
+  }
+  
