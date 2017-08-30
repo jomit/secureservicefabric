@@ -1,4 +1,6 @@
-﻿.\SetupApplications.ps1 `
+﻿# https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-cluster-creation-via-arm#set-up-azure-active-directory-for-client-authentication
+
+.\SetupApplications.ps1 `
 -TenantId 'fbfbc60c-8fc7-489c-b5f9-127ae398433d' `
 -ClusterName 'jomitsf' `
 -WebApplicationReplyUrl 'https://jomitsf.westus.cloudapp.azure.com:19080/Explorer/index.html'
