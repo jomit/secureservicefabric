@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "value": "jsftest"
+        },
+        "clusterLocation": {
+            "value": "westus"
+        },
+        "computeLocation": {
+            "value": "westus"
+        },
+        "adminUserName": {
+            "value": "jomit"
+        },
+        "adminPassword": {
+            "value": "Book@cafe123"
+        },
+        "nicName": {
+            "value": "NIC-jomitsf"
+        },
+        "publicIPAddressName": {
+            "value": "jomitsf-PubIP"
+        },
+        "dnsName": {
+            "value": "jomitsf"
+        },
+        "virtualNetworkName": {
+            "value": "VNet-jomitsf"
+        },
+        "lbName": {
+            "value": "LB-jomitsf"
+        },
+        "lbIPName": {
+            "value": "LBIP-jomitsf"
+        },
+        "applicationDiagnosticsStorageAccountName": {
+            "value": "sfdgjomitsf9490"
+        },
+        "supportLogStorageAccountName": {
+            "value": "sflogsjomitsf4125"
+        },
+        "vmImageSku": {
+            "value": "2012-R2-Datacenter"
+        },
+        "nt0ephemeralStartPort": {
+            "value": 49152
+        },
+        "nt0ephemeralEndPort": {
+            "value": 65534
+        },
+        "nt0applicationStartPort": {
+            "value": 20000
+        },
+        "nt0applicationEndPort": {
+            "value": 30000
+        },
+        "nt0fabricTcpGatewayPort": {
+            "value": 19000
+        },
+        "nt0fabricHttpGatewayPort": {
+            "value": 19080
+        },
+        "nt1ephemeralStartPort": {
+            "value": 49152
+        },
+        "nt1ephemeralEndPort": {
+            "value": 65534
+        },
+        "nt1applicationStartPort": {
+            "value": 20000
+        },
+        "nt1applicationEndPort": {
+            "value": 30000
+        },
+        "nt1fabricTcpGatewayPort": {
+            "value": 19000
+        },
+        "nt1fabricHttpGatewayPort": {
+            "value": 19080
+        }
+    }
+}

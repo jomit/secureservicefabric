@@ -1,0 +1,22 @@
+{
+	"primary": {
+		"vmSize": "Standard_D5_v2",
+		"vmInstanceCount": 9,
+		"nodeDurability": "silver",
+		"nodeReliability": "platinum"
+	},
+	"registry": {
+		"vmSize": "Standard_DS3_v2",
+		"vmInstanceCount": 3,
+		"nodeDurability": "bronze"
+	},
+	"bigservice": {
+		"vmSize": "Standard_D5_v2",
+		"vmInstanceCount": 20,
+		"nodeDurability": "silver"
+	},
+	"metricActivityThresholds": {
+		"memoryInMB": "48000"
+	}
+}
+ 
