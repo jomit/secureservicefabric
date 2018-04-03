@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest  ApplicationTypeName="nodesfappType" ApplicationTypeVersion="1.0.0"
+                      xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   
+   <ServiceManifestImport>
+      <ServiceManifestRef ServiceManifestName="nodesampleappPkg" ServiceManifestVersion="1.0.0" />
+      <Policies>
+        <ContainerHostPolicies CodePackageRef="Code">
+            <RepositoryCredentials AccountName="jomitacr" Password="" PasswordEncrypted="false"/>
+            <PortBinding ContainerPort="3000" EndpointRef="nodesampleappTypeEndpoint"/>
+        </ContainerHostPolicies>
+      </Policies>
+   </ServiceManifestImport>
+   
+   <DefaultServices>
+      <Service Name="nodesampleapp">
+         <StatelessService ServiceTypeName="nodesampleappType" InstanceCount="1">
+            <SingletonPartition />
+         </StatelessService>
+      </Service>
+   </DefaultServices>
+   
+</ApplicationManifest>

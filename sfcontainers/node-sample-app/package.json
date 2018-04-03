@@ -1,0 +1,14 @@
+{
+  "name": "sampleapp",
+  "version": "1.0.0",
+  "description": "Sample app to test containers on Service Fabric",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "jomit",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
