@@ -20,7 +20,7 @@
 
    <Resources>
     <Endpoints>
-      <Endpoint Name="nodesampleappTypeEndpoint" UriScheme="https" Port="3000" Protocol="https"/>
+      <Endpoint Name="nodesampleappTypeEndpoint" UriScheme="http" Port="80" Protocol="http"/>
     </Endpoints>
   </Resources>
  </ServiceManifest>

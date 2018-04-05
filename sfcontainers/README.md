@@ -4,7 +4,7 @@
 
 - `docker build -t node-sample-app .`
 
-- `docker run -p 3000:3000 -d node-sample-app`
+- `docker run -p 80:80 -d node-sample-app`
 
 #### Push Docker Image to Azure Container Registry
 
@@ -57,6 +57,10 @@
 - `sfctl cluster select --endpoint https://jacksf.westus2.cloudapp.azure.com:19080 --pem mycert.pem --no-verify`
 
 - `.\install.sh`
+
+- Add the Load Balancing Rule for Port 80
+
+- Browser the app at : http://jacksf.westus2.cloudapp.azure.com/
 
 - `.\uninstall.sh`
 
