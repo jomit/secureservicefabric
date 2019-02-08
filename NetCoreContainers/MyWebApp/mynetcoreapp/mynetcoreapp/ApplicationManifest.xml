@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest  ApplicationTypeName="mynetcoreappType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <ServiceManifestImport>
+      <ServiceManifestRef ServiceManifestName="mywebappPkg" ServiceManifestVersion="1.0.0" />
+        <Policies>
+            <ContainerHostPolicies CodePackageRef="Code">
+                <PortBinding ContainerPort="80" EndpointRef="mywebappEndpoint"/>
+                <RepositoryCredentials AccountName="jomitacr" Password="" PasswordEncrypted="false"/>
+            </ContainerHostPolicies>
+        </Policies>
+   </ServiceManifestImport>
+   
+   <DefaultServices>
+      <Service Name="mywebapp">
+         <StatelessService ServiceTypeName="mywebappType" InstanceCount="-1">
+            <SingletonPartition />
+            <PlacementConstraints>(NodeType==frontend)</PlacementConstraints>
+         </StatelessService>
+      </Service>
+   </DefaultServices>
+</ApplicationManifest>
