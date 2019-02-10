@@ -30,20 +30,20 @@ namespace WebService.Controllers
         [HttpGet]
         public async Task<List<string>> Get()
         {
-            Uri backendServiceUri = WebService.GetBackendServiceName(this.serviceContext);
-            var allPartitions = await this.fabricClient.QueryManager.GetPartitionListAsync(backendServiceUri);
+            //Uri backendServiceUri = WebService.GetBackendServiceName(this.serviceContext);
+            //var allPartitions = await this.fabricClient.QueryManager.GetPartitionListAsync(backendServiceUri);
 
             var allPlanets = new List<string>();
-            foreach (var currentPartition in allPartitions)
-            {
-                long minKey = (currentPartition.PartitionInformation as Int64RangePartitionInformation).LowKey;
-                var backendServiceClient = ServiceProxy.Create<IBackendService>(backendServiceUri, new ServicePartitionKey(minKey));
-                var result = await backendServiceClient.GetPlanetsAsync(CancellationToken.None);
-                if (result != null)
-                {
-                    allPlanets.AddRange(result);
-                }
-            }
+            //foreach (var currentPartition in allPartitions)
+            //{
+            //    long minKey = (currentPartition.PartitionInformation as Int64RangePartitionInformation).LowKey;
+            //    var backendServiceClient = ServiceProxy.Create<IBackendService>(backendServiceUri, new ServicePartitionKey(minKey));
+            //    var result = await backendServiceClient.GetPlanetsAsync(CancellationToken.None);
+            //    if (result != null)
+            //    {
+            //        allPlanets.AddRange(result);
+            //    }
+            //}
             return allPlanets;
         }
 

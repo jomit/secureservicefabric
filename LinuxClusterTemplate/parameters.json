@@ -1,0 +1,102 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "clusterName": {
+            "value": "jomitsf"
+        },
+        "clusterLocation": {
+            "value": "westus"
+        },
+        "computeLocation": {
+            "value": "westus"
+        },
+        "adminUserName": {
+            "value": "jomit"
+        },
+        "adminPassword": {
+            "value": ""
+        },
+        "nicName": {
+            "value": "NIC-jomitsf"
+        },
+        "publicIPAddressName": {
+            "value": "jomitsf-PubIP"
+        },
+        "dnsName": {
+            "value": "jomitsf"
+        },
+        "virtualNetworkName": {
+            "value": "VNet-jomitsf"
+        },
+        "lbName": {
+            "value": "LB-jomitsf"
+        },
+        "lbIPName": {
+            "value": "LBIP-jomitsf"
+        },
+        "applicationDiagnosticsStorageAccountName": {
+            "value": "sfdgjomitsf2044"
+        },
+        "supportLogStorageAccountName": {
+            "value": "sflogsjomitsf9987"
+        },
+        "sourceVaultValue": {
+            "value": "/subscriptions/d0c802cd-23ce-4323-a183-5f6d9a84743e/resourceGroups/AllVaults/providers/Microsoft.KeyVault/vaults/sftrialsvault"
+        },
+        "certificateUrlValue": {
+            "value": "https://sftrialsvault.vault.azure.net/secrets/jomitsf/85681e31fd364c59988d9bb3f8c68380"
+        },
+        "certificateThumbprint": {
+            "value": "<CertThumbprint>"
+        },
+        "vmImageSku": {
+            "value": "16.04-LTS"
+        },
+        "vmImageVersion": {
+            "value": "latest"
+        },
+        "vmImagePublisher": {
+            "value": "Canonical"
+        },
+        "vmImageOffer": {
+            "value": "UbuntuServer"
+        },
+        "nt0ephemeralStartPort": {
+            "value": 49152
+        },
+        "nt0ephemeralEndPort": {
+            "value": 65534
+        },
+        "nt0applicationStartPort": {
+            "value": 20000
+        },
+        "nt0applicationEndPort": {
+            "value": 30000
+        },
+        "nt0fabricTcpGatewayPort": {
+            "value": 19000
+        },
+        "nt0fabricHttpGatewayPort": {
+            "value": 19080
+        },
+        "nt1ephemeralStartPort": {
+            "value": 49152
+        },
+        "nt1ephemeralEndPort": {
+            "value": 65534
+        },
+        "nt1applicationStartPort": {
+            "value": 20000
+        },
+        "nt1applicationEndPort": {
+            "value": 30000
+        },
+        "nt1fabricTcpGatewayPort": {
+            "value": 19000
+        },
+        "nt1fabricHttpGatewayPort": {
+            "value": 19080
+        }
+    }
+}

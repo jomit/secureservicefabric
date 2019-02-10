@@ -1,32 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="MultipleNamedAppInstancesType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
   <Parameters>
-    <Parameter Name="BackendService_MinReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="BackendService_PartitionCount" DefaultValue="3" />
-    <Parameter Name="BackendService_TargetReplicaSetSize" DefaultValue="3" />
-    <Parameter Name="WebService_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
-    <Parameter Name="WebService_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="DataService_MinReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="DataService_PartitionCount" DefaultValue="5" />
+    <Parameter Name="DataService_TargetReplicaSetSize" DefaultValue="3" />
+    <Parameter Name="WebApiService_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
+    <Parameter Name="WebApiService_InstanceCount" DefaultValue="-1" />
   </Parameters>
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="BackendServicePkg" ServiceManifestVersion="1.0.0" />
+    <ServiceManifestRef ServiceManifestName="DataServicePkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
   </ServiceManifestImport>
   <ServiceManifestImport>
-    <ServiceManifestRef ServiceManifestName="WebServicePkg" ServiceManifestVersion="1.0.0" />
+    <ServiceManifestRef ServiceManifestName="WebApiServicePkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
     <EnvironmentOverrides CodePackageRef="code">
-      <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[WebService_ASPNETCORE_ENVIRONMENT]" />
+      <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[WebApiService_ASPNETCORE_ENVIRONMENT]" />
     </EnvironmentOverrides>
   </ServiceManifestImport>
   <DefaultServices>
-    <Service Name="BackendService" ServicePackageActivationMode="ExclusiveProcess">
-      <StatefulService ServiceTypeName="BackendServiceType" TargetReplicaSetSize="[BackendService_TargetReplicaSetSize]" MinReplicaSetSize="[BackendService_MinReplicaSetSize]">
-        <UniformInt64Partition PartitionCount="[BackendService_PartitionCount]" LowKey="1" HighKey="3" />
+    <Service Name="DataService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatefulService ServiceTypeName="DataServiceType" TargetReplicaSetSize="[DataService_TargetReplicaSetSize]" MinReplicaSetSize="[DataService_MinReplicaSetSize]">
+        <UniformInt64Partition PartitionCount="[DataService_PartitionCount]" LowKey="1" HighKey="5" />
+        <PlacementConstraints>(NodeType==apps)</PlacementConstraints>
       </StatefulService>
     </Service>
-    <Service Name="WebService" ServicePackageActivationMode="ExclusiveProcess">
-      <StatelessService ServiceTypeName="WebServiceType" InstanceCount="[WebService_InstanceCount]">
+    <Service Name="WebApiService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="WebApiServiceType" InstanceCount="[WebApiService_InstanceCount]">
         <SingletonPartition />
+        <PlacementConstraints>(NodeType==apps)</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>

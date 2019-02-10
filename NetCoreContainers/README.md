@@ -57,6 +57,8 @@
 
 - [SF Powershell Samples](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-powershell-samples)
 
+- [SF Cluster Powershell Commands](https://docs.microsoft.com/en-us/powershell/module/servicefabric/?view=azureservicefabricps)
+
 - [Multi container App and Service Manifest examples](https://docs.microsoft.com/en-us/azure/service-fabric/service-fabric-manifest-example-container-app)
 
 - [Issue : Application provision fails with E_INVALIDARG fabric error](https://github.com/Microsoft/service-fabric-cli/issues/107)

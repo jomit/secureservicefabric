@@ -32,8 +32,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BackendService\BackendService.csproj" />
-    <ProjectReference Include="..\WebService\WebService.csproj" />
+    <ProjectReference Include="..\DataService\DataService.csproj" />
+    <ProjectReference Include="..\WebApiService\WebApiService.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

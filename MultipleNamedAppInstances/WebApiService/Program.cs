@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebService
+namespace WebApiService
 {
     internal static class Program
     {
@@ -20,13 +20,10 @@ namespace WebService
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                //FIX: https://github.com/dotnet/corefx/issues/34263
-                Environment.SetEnvironmentVariable("LD_LIBRARY_PATH", null);
+                ServiceRuntime.RegisterServiceAsync("WebApiServiceType",
+                    context => new WebApiService(context)).GetAwaiter().GetResult();
 
-                ServiceRuntime.RegisterServiceAsync("WebServiceType",
-                    context => new WebService(context)).GetAwaiter().GetResult();
-
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(WebService).Name);
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(WebApiService).Name);
 
                 // Prevents this host process from terminating so services keeps running. 
                 Thread.Sleep(Timeout.Infinite);

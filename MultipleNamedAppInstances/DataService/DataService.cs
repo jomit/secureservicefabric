@@ -8,17 +8,14 @@ using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
-using BackendService.Domain;
+using DataService.Domain;
 
-namespace BackendService
+namespace DataService
 {
-    /// <summary>
-    /// An instance of this class is created for each service replica by the Service Fabric runtime.
-    /// </summary>
-    internal sealed class BackendService : StatefulService, IBackendService
+    internal sealed class DataService : StatefulService, IDataService
     {
         private const string PlanetsDictionaryName = "planets";
-        public BackendService(StatefulServiceContext context)
+        public DataService(StatefulServiceContext context)
             : base(context)
         { }
 
@@ -36,7 +33,7 @@ namespace BackendService
         {
             var backendItems = await this.StateManager.GetOrAddAsync<IReliableDictionary2<string, string>>(PlanetsDictionaryName);
             var planets = new List<string>();
-            planets.Add("Earth");
+            //planets.Add("Earth");
             using (var transaction = this.StateManager.CreateTransaction())
             {
                 var planetEnumerator = (await backendItems.CreateEnumerableAsync(transaction)).GetAsyncEnumerator();
@@ -51,6 +48,11 @@ namespace BackendService
         // https://aka.ms/servicefabricservicecommunication
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
+            //return new ServiceReplicaListener[0];
+            //return this.CreateServiceRemotingReplicaListeners();
+            //return new[] {
+            //    new ServiceReplicaListener(context => this.CreateServiceRemotingReplicaListeners(context))
+            //};
             return this.CreateServiceRemotingReplicaListeners();
         }
 
