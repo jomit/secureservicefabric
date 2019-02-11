@@ -6,5 +6,6 @@
     <Parameter Name="DataService_TargetReplicaSetSize" Value="1" />
     <Parameter Name="WebApiService_ASPNETCORE_ENVIRONMENT" Value="Development" />
     <Parameter Name="WebApiService_InstanceCount" Value="1" />
+    <Parameter Name="WebApiService_Port" Value="3000" />
   </Parameters>
 </Application>

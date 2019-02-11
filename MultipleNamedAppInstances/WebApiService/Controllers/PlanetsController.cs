@@ -50,7 +50,7 @@ namespace WebApiService.Controllers
         public Task Post([FromBody] string name)
         {
             Uri backendServiceUri = WebApiService.GetDataServiceName(this.serviceContext);
-            var backendServiceClient = ServiceProxy.Create<IDataService>(backendServiceUri, new ServicePartitionKey(new Random().Next(1, 6)));
+            var backendServiceClient = ServiceProxy.Create<IDataService>(backendServiceUri, new ServicePartitionKey(GetPartitionId()));
             try
             {
                 return backendServiceClient.AddPlanetAsync(name);
@@ -60,6 +60,13 @@ namespace WebApiService.Controllers
                 ServiceEventSource.Current.Message("Web Service: Exception creating {0}: {1}", name, ex);
                 throw;
             }
+        }
+
+        internal int GetPartitionId()
+        {
+            //TODO: VSDebug
+            //return 1;
+            return new Random().Next(1, 4);
         }
     }
 }

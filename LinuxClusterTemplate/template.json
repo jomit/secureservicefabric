@@ -270,11 +270,11 @@
         },
         "vmNodeType0Size": {
             "type": "string",
-            "defaultValue": "Standard_D1_v2"
+            "defaultValue": "Standard_D2s_v3"
         },
         "nt1InstanceCount": {
             "type": "int",
-            "defaultValue": 5,
+            "defaultValue": 3,
             "metadata": {
                 "description": "Instance count for node type"
             }
@@ -286,7 +286,7 @@
         },
         "vmNodeType1Size": {
             "type": "string",
-            "defaultValue": "Standard_D1_v2"
+            "defaultValue": "Standard_D2s_v3"
         }
     },
     "variables": {
@@ -982,7 +982,7 @@
                             "startPort": "[parameters('nt0applicationStartPort')]"
                         },
                         "clientConnectionEndpointPort": "[parameters('nt0fabricTcpGatewayPort')]",
-                        "durabilityLevel": "Bronze",
+                        "durabilityLevel": "Silver",
                         "ephemeralPorts": {
                             "endPort": "[parameters('nt0ephemeralEndPort')]",
                             "startPort": "[parameters('nt0ephemeralStartPort')]"

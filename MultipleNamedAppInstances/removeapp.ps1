@@ -9,7 +9,10 @@ Connect-ServiceFabricCluster -ConnectionEndpoint $endpoint `
           -StoreLocation CurrentUser -StoreName My
 
 # Remove an application instance
-Remove-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances
+Remove-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/MilkyWay
+
+# Remove an application instance
+Remove-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/Andromeda
 
 # Unregister the application type
 Unregister-ServiceFabricApplicationType -ApplicationTypeName MultipleNamedAppInstancesType -ApplicationTypeVersion 1.0.0

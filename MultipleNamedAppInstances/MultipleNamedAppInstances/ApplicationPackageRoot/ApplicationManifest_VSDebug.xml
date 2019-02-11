@@ -6,7 +6,7 @@
     <Parameter Name="DataService_TargetReplicaSetSize" DefaultValue="3" />
     <Parameter Name="WebApiService_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
     <Parameter Name="WebApiService_InstanceCount" DefaultValue="-1" />
-    <Parameter Name="WebApiService_Port" DefaultValue="" />
+    <Parameter Name="WebApiService_Port" DefaultValue="3000" />
   </Parameters>
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="DataServicePkg" ServiceManifestVersion="1.0.0" />
@@ -15,11 +15,6 @@
   <ServiceManifestImport>
     <ServiceManifestRef ServiceManifestName="WebApiServicePkg" ServiceManifestVersion="1.0.0" />
     <ConfigOverrides />
-    <ResourceOverrides>
-      <Endpoints>
-        <Endpoint Name="ServiceEndpoint" Port="[WebApiService_Port]" Protocol="http" Type="Input" />
-      </Endpoints>
-    </ResourceOverrides>
     <EnvironmentOverrides CodePackageRef="code">
       <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[WebApiService_ASPNETCORE_ENVIRONMENT]" />
     </EnvironmentOverrides>
@@ -28,13 +23,11 @@
     <Service Name="DataService" ServicePackageActivationMode="ExclusiveProcess">
       <StatefulService ServiceTypeName="DataServiceType" TargetReplicaSetSize="[DataService_TargetReplicaSetSize]" MinReplicaSetSize="[DataService_MinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[DataService_PartitionCount]" LowKey="1" HighKey="3" />
-        <PlacementConstraints>(NodeType==apps)</PlacementConstraints>
       </StatefulService>
     </Service>
     <Service Name="WebApiService" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="WebApiServiceType" InstanceCount="[WebApiService_InstanceCount]">
         <SingletonPartition />
-        <PlacementConstraints>(NodeType==apps)</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>

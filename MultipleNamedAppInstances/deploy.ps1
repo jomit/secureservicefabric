@@ -17,11 +17,14 @@ Copy-ServiceFabricApplicationPackage -ApplicationPackagePath $AppPath -ImageStor
 Register-ServiceFabricApplicationType -ApplicationPathInImageStore MultipleNamedAppInstances
 
 # Create the application instance.
-New-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances -ApplicationTypeName MultipleNamedAppInstancesType -ApplicationTypeVersion 1.0.0
+New-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/MilkyWay `
+-ApplicationTypeName MultipleNamedAppInstancesType `
+-ApplicationTypeVersion 1.0.0 `
+-ApplicationParameter @{WebApiService_Port='3000'}
 
 # Create the application for "Tenant1"
-#New-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/Tenant1 -ApplicationTypeName MultipleNamedAppInstancesType -ApplicationTypeVersion 1.0.0
-
-# Create the application for "Tenant2"
-#New-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/Tenant2 -ApplicationTypeName MultipleNamedAppInstancesType -ApplicationTypeVersion 1.0.0
+New-ServiceFabricApplication -ApplicationName fabric:/MultipleNamedAppInstances/Andromeda `
+-ApplicationTypeName MultipleNamedAppInstancesType `
+-ApplicationTypeVersion 1.0.0 `
+-ApplicationParameter @{WebApiService_Port='3001'}
 

@@ -35,13 +35,9 @@ namespace WebApiService
                 new ServiceInstanceListener(serviceContext =>
                     new KestrelCommunicationListener(serviceContext, "ServiceEndpoint", (url, listener) =>
                     {
+                        // This won't work with Kestrel as we cannot share a port between multiple instances.
                         //string tenantName = new Uri(serviceContext.CodePackageActivationContext.ApplicationName).Segments.Last();
-                        //if (string.IsNullOrEmpty(tenantName))
-                        //{
-                        //    tenantName = "jack";
-                        //}
                         //url += $"/{tenantName}";
-                        url += "/jack";
 
                         ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
 

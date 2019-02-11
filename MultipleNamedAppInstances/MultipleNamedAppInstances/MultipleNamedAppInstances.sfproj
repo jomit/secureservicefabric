@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ApplicationPackageRoot\ApplicationManifest_VSDebug.xml" />
     <None Include="ApplicationPackageRoot\ApplicationManifest.xml" />
     <None Include="ApplicationParameters\Cloud.xml" />
     <None Include="ApplicationParameters\Local.1Node.xml" />
