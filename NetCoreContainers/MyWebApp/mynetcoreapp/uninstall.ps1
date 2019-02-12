@@ -1,4 +1,0 @@
-
-Remove-ServiceFabricApplication fabric:/mynetcoreapp 
-Unregister-ServiceFabricApplicationType mynetcoreappType 1.0.0
-Remove-ServiceFabricApplicationPackage mynetcoreapp
